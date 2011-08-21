@@ -1,0 +1,8 @@
+?package(siduction-irc): \
+	needs="X11" \
+	section="Applications/Network/Communication" \
+	hints="siduction,Net" \
+	title="IRC Chat #siduction" \
+	icon32x32="/usr/share/pixmaps/siduction-irc.xpm" \
+	icon16x16="/usr/share/pixmaps/siduction-irc-16.xpm" \
+	command="siduction-irc"

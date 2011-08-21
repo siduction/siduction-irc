@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=siduction-irc
+Icon=aptosid-irc
+Name=siduction-irc
+GenericName=IRC Chat #siduction
+GenericName[de]=IRC Chat #siduction
+GenericName[ru]=Чат в канале #siduction
+Categories=Network;

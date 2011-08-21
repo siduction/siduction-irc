@@ -1,0 +1,26 @@
+Source: siduction-irc
+Section: net
+Priority: extra
+Maintainer: Torsten Wohlfarth <t.wohlfarth@gmx.de>
+XSBC-Original-Maintainer: Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Build-Depends: debhelper (>= 7.9.3)
+Standards-Version: 3.9.2
+Vcs-Svn: svn://svn.berlios.de/fullstory/aptosid-irc/trunk
+Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/aptosid-irc/trunk/
+
+Package: siduction-irc
+Architecture: all
+Depends: ${misc:Depends},
+ ssft,
+ irssi | weechat-curses
+Suggests: konversation (>> 0.18) | ksirc | xchat,
+ python,
+ distro-defaults,
+ xterm | x-terminal-emulator,
+ infobash
+Description: Start a suitable IRC client to enter #siduction
+ siduction-irc provides an easy way to choose a nickname and to enter the
+ #siduction irc channel.
+ .
+ siduction-irc tries to catch starting an IRC client as root and offers frontend
+ support for various X and cli IRC clients.

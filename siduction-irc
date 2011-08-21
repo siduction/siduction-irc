@@ -1,0 +1,418 @@
+#!/bin/sh
+# Copyright (C) 2005 Michiel Lieuwe de Boer
+# Copyright (C) 2005-2011 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# override tool behaviour through distro-defaults
+FLL_IRC_SERVER="irc.oftc.net"
+FLL_IRC_PORT="6667"
+    if [ `echo $LANG | cut -c 1-5` = "de_DE" ]; then
+	FLL_IRC_CHANNEL="#siduction-de"
+    else
+	FLL_IRC_CHANNEL="#siduction"
+    fi
+FLL_DISTRO_NAME="siduction"
+
+
+# define user settings
+NICK="Live-${FLL_DISTRO_NAME}$(mawk 'BEGIN{print int(1000 * rand())}')"
+XTERM_OPT="-e"
+
+
+# determine system status
+MKTEMP="$(which mktemp)"			|| MKTEMP="/bin/mktemp"
+SSFTSH="$(which ssft.sh)"			|| SSFTSH="/usr/bin/ssft.sh"
+SU="$(which su)"				|| SU="/bin/su"
+XTERMINAL="$(which x-terminal-emulator)"	|| XTERMINAL="/usr/bin/x-terminal-emulator"
+
+IRSSI="$(which irssi)"				|| IRSSI="/usr/bin/irssi"
+KSIRC="$(which ksirc)"				|| KSIRC="/usr/bin/ksirc"
+KONVERSATION="$(which konversation)"		|| KONVERSATION="/usr/bin/konversation"
+WEECHAT="$(which weechat-curses)"		|| WEECHAT="/usr/bin/weechat-curses"
+XCHAT="$(which xchat)"				|| XCHAT="/usr/bin/xchat"
+
+# internal functions
+fll_irssi()
+{
+	TERM_TYPE="utf-8"
+	#TERM_TYPE="8bit"
+	IRSSICFG="$($MKTEMP -dp /tmp/ .irssi-XXXXXXXXXX)"
+
+	CTCPS=0
+	if [ -e /etc/siduction-version ]; then
+		QUITMSG="$(cat /etc/siduction-version) | http://siduction.net"
+	else
+		QUITMSG="http://siduction.net"
+	fi
+
+	cat <<_EOF_ >"$IRSSICFG/config"
+servers = (
+  {
+    address = "$FLL_IRC_SERVER";
+    chatnet = "oftc";
+    port = "$FLL_IRC_PORT";
+    autoconnect = "yes";
+  }
+);
+
+chatnets = {
+  oftc = {
+    type = "IRC";
+    max_kicks = "4";
+    max_modes = "4";
+    max_msgs = "1";
+    max_whois = "1";
+  };
+};
+
+channels = (
+  { name = "$FLL_IRC_CHANNEL"; chatnet = "oftc"; autojoin = "yes"; }
+);
+_EOF_
+
+	# See also special siduction aliases in here, like "/IBS", "/IBV", "/IB", "/GFX", "/SND", and "/X"
+	cat <<"_EOF_" >>"$IRSSICFG/config"
+aliases = {
+  J = "join";
+  WJOIN = "join -window";
+  WQUERY = "query -window";
+  LEAVE = "part";
+  BYE = "quit";
+  EXIT = "quit";
+  SIGNOFF = "quit";
+  DESCRIBE = "action";
+  DATE = "time";
+  HOST = "userhost";
+  LAST = "lastlog";
+  SAY = "msg *";
+  WI = "whois";
+  WII = "whois $0 $0";
+  WW = "whowas";
+  W = "who";
+  N = "names";
+  M = "msg";
+  T = "topic";
+  C = "clear";
+  CL = "clear";
+  K = "kick";
+  KB = "kickban";
+  KN = "knockout";
+  BANS = "ban";
+  B = "ban";
+  MUB = "unban *";
+  UB = "unban";
+  IG = "ignore";
+  UNIG = "unignore";
+  SB = "scrollback";
+  UMODE = "mode $N";
+  WC = "window close";
+  WN = "window new hide";
+  SV = "say Irssi $J ($V) - http://irssi.org/";
+  GOTO = "sb goto";
+  CHAT = "dcc chat";
+  RUN = "SCRIPT LOAD";
+  UPTIME = "eval exec - expr `date +%s` - \\$F | awk '{print \"Irssi uptime: \"int(\\\\\\$1/3600/24)\"d \"int(\\\\\\$1/3600%24)\"h \"int(\\\\\\$1/60%60)\"m \"int(\\\\\\$1%60)\"s\" }'";
+  CALC = "exec - if which bc &>/dev/null\\; then echo '$*' | bc | awk '{print \"$*=\"$$1}'\\; else echo bc was not found\\; fi";
+  SBAR = "STATUSBAR";
+  INVITELIST = "mode $C +I";
+  Q = "QUERY";
+  QUIT = "foreach window /part;/quit";
+  INFOBASH = "/exec -o infobash $*";
+  X = "QUIT";
+};
+
+statusbar = {
+  # formats:
+  # when using {templates}, the template is shown only if it's argument isn't
+  # empty unless no argument is given. for example {sb} is printed always,
+  # but {sb $T} is printed only if $T isn't empty.
+
+  items = {
+    # start/end text in statusbars
+    barstart = "{sbstart}";
+    barend = "{sbend}";
+
+    topicbarstart = "{topicsbstart}";
+    topicbarend = "{topicsbend}";
+
+    # treated "normally", you could change the time/user name to whatever
+    time = "{sb $Z}";
+    user = "{sb {sbnickmode $cumode}$N{sbmode $usermode}{sbaway $A}}";
+
+    # treated specially .. window is printed with non-empty windows,
+    # window_empty is printed with empty windows
+    window = "{sb $winref:$itemname{sbmode $M}}";
+    window_empty = "{sb $winref{sbservertag $tag}}";
+    prompt = "{prompt $[.15]itemname}";
+    prompt_empty = "{prompt $winname}";
+    topic = " $topic";
+    topic_empty = " Irssi v$J - http://irssi.org/help/";
+
+    # all of these treated specially, they're only displayed when needed
+    lag = "{sb Lag: $0-}";
+    act = "{sb Act: $0-}";
+    more = "-- more --";
+  };
+
+  # there's two type of statusbars. root statusbars are either at the top
+  # of the screen or at the bottom of the screen. window statusbars are at
+  # the top/bottom of each split window in screen.
+  default = {
+    # the "default statusbar" to be displayed at the bottom of the window.
+    # contains all the normal items.
+    window = {
+      disabled = "no";
+
+      # window, root
+      type = "window";
+      # top, bottom
+      placement = "bottom";
+      # number
+      position = "1";
+      # active, inactive, always
+      visible = "active";
+
+      # list of items in statusbar in the display order
+      items = {
+        barstart = { priority = "100"; };
+        time = { };
+        user = { };
+        window = { };
+        window_empty = { };
+        lag = { priority = "-1"; };
+        act = { priority = "10"; };
+        more = { priority = "-1"; alignment = "right"; };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+
+    # statusbar to use in inactive split windows
+    window_inact = {
+      type = "window";
+      placement = "bottom";
+      position = "1";
+      visible = "inactive";
+      items = {
+        barstart = { priority = "100"; };
+        window = { };
+        window_empty = { };
+        more = { priority = "-1"; alignment = "right"; };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+
+    # we treat input line as yet another statusbar :) It's possible to
+    # add other items before or after the input line item.
+    prompt = {
+      type = "root";
+      placement = "bottom";
+      # we want to be at the bottom always
+      position = "100";
+      visible = "always";
+      items = {
+        prompt = { priority = "-1"; };
+        prompt_empty = { priority = "-1"; };
+        # treated specially, this is the real input line.
+        input = { priority = "10"; };
+      };
+    };
+
+    # topicbar
+    topic = {
+      type = "root";
+      placement = "top";
+      position = "1";
+      visible = "always";
+      items = {
+        topicbarstart = { priority = "100"; };
+        topic = { };
+        topic_empty = { };
+        topicbarend = { priority = "100"; alignment = "right"; };
+      };
+    };
+  };
+};
+_EOF_
+
+	cat <<_EOF_ >>"$IRSSICFG/config"
+settings = {
+  core = {
+    real_name = "siduction user";
+    user_name = "siduction";
+    nick = "$NICK";
+    quit_message = "$QUITMSG";
+  };
+
+  "irc/core" = { part_message = "$QUITMSG"; };
+  
+  "irc/dcc" = {
+    dcc_upload_path = "/tmp";
+    dcc_download_path = "/tmp";
+    dcc_autoget = "no";
+    dcc_autochat_masks = "*";
+    dcc_autoget_masks = "= *";
+  };
+  "fe-text" = { term_type = "$TERM_TYPE"; };
+  "fe-common/core" = { completion_char = ","; };
+  
+};
+logs = { };
+
+windows = {
+  2 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "$FLL_IRC_CHANNEL";
+        tag = "oftc";
+      }
+    );
+  };
+  1 = { immortal = "yes"; name = "(status)"; level = "ALL"; };
+};
+mainwindows = { 2 = { first_line = "1"; lines = "47"; }; };
+_EOF_
+
+	[ "$CTCPS" -eq 0 ] && echo 'ignores = ( { level = "CTCPS"; } );' >>"$IRSSICFG/config"
+
+	"$IRSSI" --home="$IRSSICFG"
+	RETC="$?"
+	rm -rf "$IRSSICFG"
+	[ "$RETC" -ne 0 ] && return 127 || exit 0
+}
+
+# internal functions
+irc_konversation()
+{
+	exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+}
+
+# internal functions
+irc_xchat()
+{
+	if [ -e "/home/$USER/.xchat2/xchat.conf" ]; then
+		sed -i	-e "/^irc_nick.*/d" \
+			-e "/^irc_user_name.*/d" \
+			-e "/^irc_real_name.*/d" \
+			-e "/^tab_layout.*/d" \
+				/home/$USER/.xchat2/xchat.conf
+
+	else
+		mkdir -p /home/$USER/.xchat2
+		touch /home/$USER/.xchat2/xchat.conf
+	fi
+
+	echo "irc_nick1 = $NICK" >> /home/$USER/.xchat2/xchat.conf
+	echo "irc_nick2 = ${NICK}_" >> /home/$USER/.xchat2/xchat.conf
+	echo "irc_nick3 = ${NICK}__" >> /home/$USER/.xchat2/xchat.conf
+	echo "irc_user_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
+	echo "irc_real_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
+	echo "tab_layout = 0" >> /home/$USER/.xchat2/xchat.conf
+
+	exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
+}
+
+# internal functions
+irc_check_environ()
+{
+	use_xchat=0
+	if [ -n "${GDMSESSION}"  ] || \
+		[ "${DESKTOP_SESSION}" = "LXDE" ]; then
+			use_xchat=1
+	fi
+}
+##############################################################################
+#                               int main(void);                              #
+##############################################################################
+
+# yes, this stuff is elementary
+if [ -z "$DISPLAY" ]; then
+	for i in "$SSFTSH" "$SU"; do
+		if [ ! -x "$i" ]; then
+			echo "$i: missing, terminate abnormally"		1>&2
+			exit 999
+		fi
+	done
+else
+	for i in "$SSFTSH" "$XTERMINAL" "$SU"; do
+		if [ ! -x "$i" ]; then
+			echo "$i: missing, terminate abnormally"		1>&2
+			exit 998
+		fi
+	done
+fi
+
+if [ "$1" = "--tty" ]; then
+	DISPLAY=""
+fi
+
+# initialize ssft
+. "$SSFTSH"
+[ -n "$SSFT_FRONTEND" ] ||  SSFT_FRONTEND="$(ssft_choose_frontend)"
+
+# are you insane?
+if [ "`id -u`" = "0" ]; then
+	echo "ROOOOOOOOOOOOT has landed!"					1>&2
+	echo ""									1>&2
+	echo "Don't ever call any IRC client as root"				1>&2
+
+	if [ -n "$DISPLAY" ]; then
+		ssft_display_message "ERROR" "ROOOOOOOOOOOOT has landed!\n\nDon't ever call any IRC client as root"
+	fi
+
+	exit 996
+fi
+
+# choose your nick
+SSFT_DEFAULT="$NICK"
+ssft_read_string "${FLL_DISTRO_NAME} IRC Chat" "Choose your nick" || exit 0
+NICK="$SSFT_RESULT"
+
+# try to start your irc client
+irc_check_environ
+if [ -z "$DISPLAY" ]; then
+	# tty
+	if [ -x "$IRSSI" ]; then
+		fll_irssi
+		exit "$?"
+	fi
+
+	[ -x "$WEECHAT" ] && \
+		exec $WEECHAT "irc://$NICK@$FLL_IRC_SERVER:$FLL_IRC_PORT/$FLL_IRC_CHANNEL"
+else
+	# X11
+
+	[ -x "$XCHAT" ] && [ "$use_xchat" = "1" ] &&\
+		irc_xchat
+
+	[ -x "$KONVERSATION" ] && \
+		irc_konversation
+
+	[ -x "$KSIRC" ] && \
+		exec "$KSIRC" --server "$FLL_IRC_SERVER" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+
+	# nasty fallback, but well - it works ;)
+	exec $XTERMINAL $XTERM_OPT "$0 --tty"
+fi
+
+# Oops...
+echo "ERROR: failed to start any suitable IRC Client"				1>&2
+for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION" "$WEECHAT" "$XCHAT"; do
+	if [ -x "$i" ]; then
+		echo "$i: found."
+	else
+		echo "$i: NOT found."						1>&2
+	fi
+done
+
+                          
