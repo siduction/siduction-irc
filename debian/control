@@ -17,7 +17,7 @@ Suggests: konversation (>> 0.18) | ksirc | xchat,
  python,
  distro-defaults,
  xterm | x-terminal-emulator,
- infobash
+ inxi
 Description: Start a suitable IRC client to enter #siduction
  siduction-irc provides an easy way to choose a nickname and to enter the
  #siduction irc channel.

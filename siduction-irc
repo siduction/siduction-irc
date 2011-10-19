@@ -126,7 +126,7 @@ aliases = {
   INVITELIST = "mode $C +I";
   Q = "QUERY";
   QUIT = "foreach window /part;/quit";
-  INFOBASH = "/exec -o infobash $*";
+  INXI = "/exec -o inxi $*";
   X = "QUIT";
 };
 
