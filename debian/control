@@ -5,7 +5,7 @@ Maintainer: Torsten Wohlfarth <t.wohlfarth@gmx.de>
 XSBC-Original-Maintainer: Stefan Lippers-Hollmann <s.l-h@gmx.de>
 Build-Depends: debhelper (>= 7.9.3)
 Standards-Version: 3.9.2
-Vcs-Git: git3@git.siduction.org:packages/siduction-repository/siduction-irc.git
+Vcs-Git: git://git.siduction.org:packages/siduction-repository/siduction-irc.git
 Vcs-Browser: http://git.siduction.org/?p=packages/siduction-repository/siduction-irc.git;a=summary
 Homepage: http://developer.berlios.de/projects/fullstory/
 
