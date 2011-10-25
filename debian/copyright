@@ -15,22 +15,16 @@ License: GPL-2
   version 2.
 
 Files: debian/*
-Copyright: © 2005-2008 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Copyright: © 2011 Torsten Wohlfarth <towo@siduction.org>
+           © 2005-2008 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 License: GPL-2
   The Debian packaging information is licensed under the GNU General
   Public License, version 2.
 
 Files: icons/*
-Copyright: © 2008 Bernard Gray <bernard.gray@gmail.com>
-           © 2008 David Creedy <djcreedy@iinet.net.au>
-           © 2007 David Vignoni <david@icon-king.com>
-           © 2007 Johann Ollivier Lapeyre <johann@oxygen-icons.org>
-           © 2007 Kenneth Wimer <kwwii@bootsplash.org>
-           © 2007 Nuno Fernades Pinheiro <nf.pinheiro@gmail.com>
-           © 2007 Riccardo Iaconelli <riccardo@oxygen-icons.org>
-           © 2007 David Miller <miller@oxygen-icons.org>
+Copyright: © 2011 Markus Meyer <coruja@siduction.org> 
 License: CC-ASA-3.0 | LGPL-2+
-  aptosid-irc.svg also includes elements from The Oxygen Icon Theme.
+  siduction-irc.svg also includes elements from The Oxygen Icon Theme.
   Licensed under the Creative Common Attribution-ShareAlike 3.0
   license, as found here:
 
