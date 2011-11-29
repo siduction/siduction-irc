@@ -24,7 +24,7 @@ FLL_DISTRO_NAME="siduction"
 
 
 # define user settings
-NICK="Live-${FLL_DISTRO_NAME}$(mawk 'BEGIN{print int(1000 * rand())}')"
+NICK="Live-siducer_$(mawk 'BEGIN{print int(1000 * rand())}')"
 XTERM_OPT="-e"
 
 
@@ -49,9 +49,9 @@ fll_irssi()
 
 	CTCPS=0
 	if [ -e /etc/siduction-version ]; then
-		QUITMSG="$(cat /etc/siduction-version) | http://siduction.net"
+		QUITMSG="$(cat /etc/siduction-version) | http://siduction.org"
 	else
-		QUITMSG="http://siduction.net"
+		QUITMSG="http://siduction.org"
 	fi
 
 	cat <<_EOF_ >"$IRSSICFG/config"
@@ -247,7 +247,7 @@ _EOF_
 settings = {
   core = {
     real_name = "siduction user";
-    user_name = "siduction";
+    user_name = "siducer";
     nick = "$NICK";
     quit_message = "$QUITMSG";
   };
