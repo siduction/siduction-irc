@@ -24,7 +24,7 @@ FLL_DISTRO_NAME="siduction"
 
 
 # define user settings
-NICK="Live-siducer_$(mawk 'BEGIN{print int(1000 * rand())}')"
+NICK="siducer$(mawk 'BEGIN{print int(1000 * rand())}')"
 XTERM_OPT="-e"
 
 
