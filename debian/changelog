@@ -1,3 +1,10 @@
+siduction-irc (0.6.10) unstable; urgency=low
+
+  * Added myself to uploaders
+  * Irc nick changed, fixes #399 
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 13 Dec 2011 21:43:16 +0100
+
 siduction-irc (0.6.9) unstable; urgency=low
 
   * Changed the nickname to live-siducer
