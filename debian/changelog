@@ -1,3 +1,11 @@
+siduction-irc (0.6.11) unstable; urgency=low
+
+  * bump dephelper depends to >= 8 
+  * bump version to 0.6.11
+  * refs #399
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 13 Dec 2011 21:48:02 +0100
+
 siduction-irc (0.6.10) unstable; urgency=low
 
   * Added myself to uploaders
