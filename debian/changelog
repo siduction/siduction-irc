@@ -1,3 +1,9 @@
+siduction-irc (0.6.12) unstable; urgency=low
+
+  * improved the language selection for the joined channel.
+
+ -- Torsten Wohlfarth <towo@siduction.org>  Sat, 17 Dec 2011 14:39:20 +0100
+
 siduction-irc (0.6.11) unstable; urgency=low
 
   * bump dephelper depends to >= 8 

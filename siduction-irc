@@ -15,7 +15,7 @@
 # override tool behaviour through distro-defaults
 FLL_IRC_SERVER="irc.oftc.net"
 FLL_IRC_PORT="6667"
-    if [ `echo $LANG | cut -c 1-5` = "de_DE" ]; then
+    if [ `echo $LANG | cut -c 1-3` = "de_" ]; then
 	FLL_IRC_CHANNEL="#siduction-de"
     else
 	FLL_IRC_CHANNEL="#siduction"
