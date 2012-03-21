@@ -1,1 +1,9 @@
 /icons
+debian/files
+debian/siduction-irc.debhelper.log
+debian/siduction-irc.postinst.debhelper
+debian/siduction-irc.postrm.debhelper
+debian/siduction-irc.substvars
+debian/siduction-irc/
+
+

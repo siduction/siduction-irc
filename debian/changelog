@@ -1,3 +1,11 @@
+siduction-irc (0.6.13) unstable; urgency=low
+
+  * bumped standards to 3.9.3
+  * bumped debhelper to (>=9)
+  * .gitignore modified  
+
+ -- Alf Gaida <agaida@siduction.org>  Wed, 21 Mar 2012 14:54:21 +0100
+
 siduction-irc (0.6.12) unstable; urgency=low
 
   * improved the language selection for the joined channel.
