@@ -1,0 +1,3 @@
+# noone will never ever write a manpage for this binary
+siduction-irc: binary-without-manpage usr/bin/siduction-irc
+
