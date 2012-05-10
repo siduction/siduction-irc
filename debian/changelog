@@ -1,10 +1,29 @@
+siduction-irc (0.6.17) unstable; urgency=low
+
+  * fix other glitches from broken merge 
+
+ -- Alf Gaida <agaida@siduction.org>  Fri, 11 May 2012 00:08:04 +0200
+
+siduction-irc (0.6.16) unstable; urgency=low
+
+  * merge current development with devils changes
+  * remove whitespace trash in debian/rules
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 08 May 2012 21:03:48 +0200
+
+siduction-irc (0.6.15) unstable; urgency=low
+
+  * introduced quassel (monolithic) as irc-client, refs: #683
+
+ -- Ferdinand Thommes <devil@siduction.org>  Tue, 08 May 2012 18:30:08 +0200
+
 siduction-irc (0.6.14) unstable; urgency=low
 
-  * add source override to prevent lintian complaining about 
+  * add source override to prevent lintian complaining about
     XSBC-Original-Maintainer
-  * add siduction-irc override to prevent lintian complaining about 
-    missed manpage 
-  * fixes #650 
+  * add siduction-irc override to prevent lintian complaining about
+    missed manpage
+  * fixes #650
 
  -- Alf Gaida <agaida@siduction.org>  Thu, 22 Mar 2012 22:20:38 +0100
 
@@ -12,7 +31,7 @@ siduction-irc (0.6.13) unstable; urgency=low
 
   * bumped standards to 3.9.3
   * bumped debhelper to (>=9)
-  * .gitignore modified  
+  * .gitignore modified
 
  -- Alf Gaida <agaida@siduction.org>  Wed, 21 Mar 2012 14:54:21 +0100
 
@@ -24,7 +43,7 @@ siduction-irc (0.6.12) unstable; urgency=low
 
 siduction-irc (0.6.11) unstable; urgency=low
 
-  * bump dephelper depends to >= 8 
+  * bump dephelper depends to >= 8
   * bump version to 0.6.11
   * refs #399
 
@@ -33,7 +52,7 @@ siduction-irc (0.6.11) unstable; urgency=low
 siduction-irc (0.6.10) unstable; urgency=low
 
   * Added myself to uploaders
-  * Irc nick changed, fixes #399 
+  * Irc nick changed, fixes #399
 
  -- Alf Gaida <agaida@siduction.org>  Tue, 13 Dec 2011 21:43:16 +0100
 
@@ -84,7 +103,7 @@ aptosid-irc (0.6.4) unstable; urgency=low
 
   [ Joaquim Boura ]
   * when GDMSESSION is defined then the main x-client is xchat
-  * missing space in control file added. 
+  * missing space in control file added.
 
   [ Stefan Lippers-Hollmann ]
   * add another override for legacy systems.

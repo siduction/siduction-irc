@@ -37,6 +37,7 @@ XTERMINAL="$(which x-terminal-emulator)"	|| XTERMINAL="/usr/bin/x-terminal-emula
 IRSSI="$(which irssi)"				|| IRSSI="/usr/bin/irssi"
 KSIRC="$(which ksirc)"				|| KSIRC="/usr/bin/ksirc"
 KONVERSATION="$(which konversation)"		|| KONVERSATION="/usr/bin/konversation"
+QUASSEL="$(which quassel)"		|| QUASSEL="usr/bin/quassel"
 WEECHAT="$(which weechat-curses)"		|| WEECHAT="/usr/bin/weechat-curses"
 XCHAT="$(which xchat)"				|| XCHAT="/usr/bin/xchat"
 
@@ -253,7 +254,7 @@ settings = {
   };
 
   "irc/core" = { part_message = "$QUITMSG"; };
-  
+
   "irc/dcc" = {
     dcc_upload_path = "/tmp";
     dcc_download_path = "/tmp";
@@ -263,7 +264,7 @@ settings = {
   };
   "fe-text" = { term_type = "$TERM_TYPE"; };
   "fe-common/core" = { completion_char = ","; };
-  
+
 };
 logs = { };
 
@@ -295,6 +296,12 @@ _EOF_
 irc_konversation()
 {
 	exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+}
+
+#internal functions
+irc_quassel()
+{
+	exec "$QUASSEL" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"  --nick "$NICK"
 }
 
 # internal functions
@@ -398,6 +405,9 @@ else
 	[ -x "$KONVERSATION" ] && \
 		irc_konversation
 
+	[ -x "$Quassel" ] && \
+                irc_konversation
+
 	[ -x "$KSIRC" ] && \
 		exec "$KSIRC" --server "$FLL_IRC_SERVER" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
 
@@ -407,7 +417,7 @@ fi
 
 # Oops...
 echo "ERROR: failed to start any suitable IRC Client"				1>&2
-for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION" "$WEECHAT" "$XCHAT"; do
+for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION"  "$QUASSEL" "$WEECHAT" "$XCHAT"; do
 	if [ -x "$i" ]; then
 		echo "$i: found."
 	else
@@ -415,4 +425,4 @@ for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION" "$WEECHAT" "$XCHAT"; do
 	fi
 done
 
-                          
+
