@@ -1,3 +1,9 @@
+siduction-irc (0.6.18) unstable; urgency=low
+
+  * add kvirc
+
+ -- Torsten Wohlfarth <towo@siduction.org>  Sun, 27 May 2012 17:41:48 +0200
+
 siduction-irc (0.6.17) unstable; urgency=low
 
   * fix other glitches from broken merge 

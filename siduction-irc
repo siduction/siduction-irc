@@ -13,6 +13,10 @@
 # GNU General Public License for more details.
 
 # override tool behaviour through distro-defaults
+if [ -r /etc/default/distro ]; then
+	. /etc/default/distro
+fi
+
 FLL_IRC_SERVER="irc.oftc.net"
 FLL_IRC_PORT="6667"
     if [ `echo $LANG | cut -c 1-3` = "de_" ]; then
@@ -21,6 +25,7 @@ FLL_IRC_PORT="6667"
 	FLL_IRC_CHANNEL="#siduction"
     fi
 FLL_DISTRO_NAME="siduction"
+
 
 
 # define user settings
@@ -37,9 +42,9 @@ XTERMINAL="$(which x-terminal-emulator)"	|| XTERMINAL="/usr/bin/x-terminal-emula
 IRSSI="$(which irssi)"				|| IRSSI="/usr/bin/irssi"
 KSIRC="$(which ksirc)"				|| KSIRC="/usr/bin/ksirc"
 KONVERSATION="$(which konversation)"		|| KONVERSATION="/usr/bin/konversation"
-QUASSEL="$(which quassel)"		|| QUASSEL="usr/bin/quassel"
 WEECHAT="$(which weechat-curses)"		|| WEECHAT="/usr/bin/weechat-curses"
 XCHAT="$(which xchat)"				|| XCHAT="/usr/bin/xchat"
+KVIRC="$(which kvirc)"				|| KVIRC="/usr/bin/kvirc"
 
 # internal functions
 fll_irssi()
@@ -298,12 +303,6 @@ irc_konversation()
 	exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
 }
 
-#internal functions
-irc_quassel()
-{
-	exec "$QUASSEL" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"  --nick "$NICK"
-}
-
 # internal functions
 irc_xchat()
 {
@@ -329,8 +328,41 @@ irc_xchat()
 	exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
 }
 
+irc_kvirc()
+{
+if [ "$FLL_DISTRO_MODE" != "installed" ]; then
+	if [ -e "/home/$USER/.config/KVIrc/config/serverdb.kvc" ]; then
+				rm -f /home/$USER/.config/KVIrc/config/serverdb.kvc
+				touch /home/$USER/.config/KVIrc/config/serverdb.kvc
+	else
+		mkdir -p /home/$USER/.config/KVIrc/config/
+		touch /home/$USER/.config/KVIrc/config/serverdb.kvc
+	fi
+	cat  << _EOF_ >> "/home/$USER/.config/KVIrc/config/serverdb.kvc"
+[OFTC]
+0_Port=$FLL_IRC_PORT
+0_Hostname=$FLL_IRC_SERVER
+0_Nick=$NICK
+NServers=1
+0_AutoConnect=true
+0_Pass=
+0_OnLoginCommand=
+0_Description=main%20OFTC.net%20server
+0_SSL=false
+0_AutoJoinChannels=$FLL_IRC_CHANNEL
+0_Id=myserver942982771597
+0_RealName=$NICK
+0_User=$NICK
+0_AlternativeNick=${NICK}_
+_EOF_
+fi
+	exec "$KVIRC" --nosplash 
+
+}
+
 # internal functions
 irc_check_environ()
+
 {
 	use_xchat=0
 	if [ -n "${GDMSESSION}"  ] || \
@@ -381,9 +413,11 @@ if [ "`id -u`" = "0" ]; then
 fi
 
 # choose your nick
-SSFT_DEFAULT="$NICK"
-ssft_read_string "${FLL_DISTRO_NAME} IRC Chat" "Choose your nick" || exit 0
-NICK="$SSFT_RESULT"
+if [ "$FLL_DISTRO_MODE" != "installed" ]; then
+	SSFT_DEFAULT="$NICK"
+	ssft_read_string "${FLL_DISTRO_NAME} IRC Chat" "Choose your nick" || exit 0
+	NICK="$SSFT_RESULT"
+fi
 
 # try to start your irc client
 irc_check_environ
@@ -405,8 +439,8 @@ else
 	[ -x "$KONVERSATION" ] && \
 		irc_konversation
 
-	[ -x "$Quassel" ] && \
-                irc_konversation
+	[ -x "$KVIRC" ] && \
+		irc_kvirc
 
 	[ -x "$KSIRC" ] && \
 		exec "$KSIRC" --server "$FLL_IRC_SERVER" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
@@ -417,12 +451,10 @@ fi
 
 # Oops...
 echo "ERROR: failed to start any suitable IRC Client"				1>&2
-for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION"  "$QUASSEL" "$WEECHAT" "$XCHAT"; do
+for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION"  "$KVIRC" "$WEECHAT" "$XCHAT"; do
 	if [ -x "$i" ]; then
 		echo "$i: found."
 	else
 		echo "$i: NOT found."						1>&2
 	fi
 done
-
-
