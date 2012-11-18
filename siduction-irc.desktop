@@ -2,8 +2,7 @@
 Type=Application
 Exec=siduction-irc
 Icon=siduction-irc
-Name=siduction-irc
+Name=IRC
 GenericName=IRC Chat #siduction
 GenericName[de]=IRC Chat #siduction-de
-GenericName[ru]=Чат в канале #siduction
 Categories=Network;

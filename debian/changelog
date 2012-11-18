@@ -1,3 +1,9 @@
+siduction-irc (0.6.19) unstable; urgency=low
+
+  * change name to IRC
+
+ -- Alf Gaida <agaida@siduction.org>  Sun, 18 Nov 2012 23:59:23 +0100
+
 siduction-irc (0.6.18) unstable; urgency=low
 
   * add kvirc
