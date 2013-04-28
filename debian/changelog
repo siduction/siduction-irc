@@ -1,4 +1,4 @@
-siduction-irc (0.6.21) unstable; urgency=low
+siduction-irc (0.7.0) unstable; urgency=low
 
   [ Ovidiu Angelescu ]
   * change mode of siduction-irc.desktop to 755 using rules
@@ -9,6 +9,7 @@ siduction-irc (0.6.21) unstable; urgency=low
   * refs #1173 #1170 
   * added convbsd to uploaders 
   * removed XBSC-Original-Maintainer
+  * bump to 0.7.0
   
  -- Alf Gaida <agaida@siduction.org>  Mon, 29 Apr 2013 01:06:22 +0200
 
