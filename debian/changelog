@@ -1,3 +1,9 @@
+siduction-irc (0.6.20) UNRELEASED; urgency=low
+
+  * change mode of siduction-irc.desktop to 755 
+
+ -- Ovidiu Angelescu <convbsd@siduction.net>  Sun, 28 Nov 2013 20:43:23 +0300
+
 siduction-irc (0.6.19) unstable; urgency=low
 
   * change name to IRC
