@@ -1,8 +1,16 @@
-siduction-irc (0.6.21) UNRELEASED; urgency=low
+siduction-irc (0.6.21) unstable; urgency=low
 
+  [ Ovidiu Angelescu ]
   * change mode of siduction-irc.desktop to 755 using rules
 
- -- Ovidiu Angelescu <convbsd@siduction.net>  Sun, 28 Nov 2013 21:43:23 +0300
+  [ Alf Gaida ]
+  * make the chmod a little bit more smart
+  * complete the override
+  * refs #1173 #1170 
+  * added convbsd to uploaders 
+  * removed XBSC-Original-Maintainer
+  
+ -- Alf Gaida <agaida@siduction.org>  Mon, 29 Apr 2013 01:06:22 +0200
 
 siduction-irc (0.6.20) UNRELEASED; urgency=low
 

@@ -29,5 +29,5 @@ create-icons:
 	convert icons/hicolor/16x16/apps/siduction-irc.png icons/pixmaps/siduction-irc-16.xpm
 	
 override_dh_fixperms:
-	chmod 755 /usr/share/applications/siduction/siduction-irc.desktop
-
+	find debian -name siduction-irc.desktop -exec chmod 755 {} \;
+	dh_fixperms

@@ -3,8 +3,8 @@ Section: net
 Priority: extra
 Maintainer: Torsten Wohlfarth <towo@siduction.org>
 Uploaders: Alf Gaida <agaida@siduction.org>,
-    Ferdinand Thommes <devil@siduction.org>
-XSBC-Original-Maintainer: Stefan Lippers-Hollmann <s.l-h@gmx.de>
+ Ferdinand Thommes <devil@siduction.org>,
+ Ovidiu Angelescu <convbsd@siduction.net>,
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.3
 Vcs-Git: git://git.siduction.org:packages/siduction-repository/siduction-irc
