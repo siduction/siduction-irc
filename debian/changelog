@@ -1,3 +1,10 @@
+siduction-irc (0.7.2) UNRELEASED; urgency=low
+
+  * changes to rules to run dh_fixperms first and after that to
+    chmod to 755 siduction-irc.desktop
+
+ -- Ovidiu Angelescu <convbsd@siduction.net>  Mon, 29 April 2013 18:27:23 +0300
+
 siduction-irc (0.7.1) UNRELEASED; urgency=low
 
   * changes to rules to fix package

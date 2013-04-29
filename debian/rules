@@ -5,6 +5,7 @@
 export DH_VERBOSE=1
 
 %: 
+	dh $@ 
 
 create-icons:
 	# requires inkscape and imagemagick to be installed
@@ -32,4 +33,5 @@ create-icons:
 	convert icons/hicolor/16x16/apps/siduction-irc.png icons/pixmaps/siduction-irc-16.xpm
 	
 override_dh_fixperms:
+	dh_fixperms
 	find debian -name siduction-irc.desktop -exec chmod 755 {} \;
