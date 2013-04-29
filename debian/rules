@@ -1,7 +1,10 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 
-%:
-	dh $@
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+%: 
 
 create-icons:
 	# requires inkscape and imagemagick to be installed
@@ -30,4 +33,3 @@ create-icons:
 	
 override_dh_fixperms:
 	find debian -name siduction-irc.desktop -exec chmod 755 {} \;
-	dh_fixperms
