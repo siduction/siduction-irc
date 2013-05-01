@@ -1,10 +1,23 @@
-siduction-irc (0.7.1) unstable; urgency=low
+siduction-irc (0.7.3) unstable; urgency=low
 
   * remove override_dh_fixperms
   * install desktop file to /usr/share/applications
   * refs #1175  
 
  -- Alf Gaida <agaida@siduction.org>  Wed, 01 May 2013 14:44:49 +0200
+
+siduction-irc (0.7.2) unstable; urgency=low
+
+  * changes to rules to run dh_fixperms first and after that to
+    chmod to 755 siduction-irc.desktop
+
+ -- Ovidiu Angelescu <convbsd@siduction.net>  Mon, 29 April 2013 18:27:23 +0300
+
+siduction-irc (0.7.1) UNRELEASED; urgency=low
+
+  * changes to rules to fix package
+
+ -- Ovidiu Angelescu <convbsd@siduction.net>  Mon, 29 April 2013 06:41:23 +0300
 
 siduction-irc (0.7.0) unstable; urgency=low
 
