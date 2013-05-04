@@ -300,32 +300,45 @@ _EOF_
 # internal functions
 irc_konversation()
 {
-	exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+# we test if konversation was started and if not it will start as in live mode
+# if it was started it finds user configured nick and it will use it 
+	if [ ! -d /home/$USER/logs ]; then
+		exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+	else
+		USER_NICK=$(fgrep Nick /home/$USER/logs/oftc_#siduction.log | tail -n1 | awk '{print $13}' | cut -d . -f1)
+		if [   "X${USER_NICK}" != "X" ] ; then
+			sed -i	 "s@^Nicknames=.*@Nicknames=$USER_NICK,${USER_NICK}_,${USER_NICK}__@" /home/$USER/.kde/share/config/konversationrc
+		else 
+			if [ "$FLL_DISTRO_MODE" = "installed" ]; then
+				sed -i	 "s@^Nicknames=.*@Nicknames=$USER,${USER}_,${USER}__@" /home/$USER/.kde/share/config/konversationrc
+			else 
+				sed -i	 "s@^Nicknames=.*@Nicknames=$NICK,${NICK}_,${NICK}__@" /home/$USER/.kde/share/config/konversationrc
+			fi
+		fi
+		exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"
+	fi
+# todo to find USER_IRC_CHANNEL and to start with it instead of  FLL_IRC_CHANNEL
 }
 
 # internal functions
 irc_xchat()
 {
-	if [ -e "/home/$USER/.xchat2/xchat.conf" ]; then
-		sed -i	-e "/^irc_nick.*/d" \
-			-e "/^irc_user_name.*/d" \
-			-e "/^irc_real_name.*/d" \
-			-e "/^tab_layout.*/d" \
-				/home/$USER/.xchat2/xchat.conf
-
-	else
+# we test if xchat was started and if not it will start as in live mode
+# if it was started it finds user irc channels and it will use it 
+	USER_IRC_CHANNEL=$(fgrep "#siduction" /home/$USER/.xchat2/servlist_.conf | cut -d = -f2)
+	if [ ! -e "/home/$USER/.xchat2/xchat.conf" ]; then
 		mkdir -p /home/$USER/.xchat2
 		touch /home/$USER/.xchat2/xchat.conf
+		echo "irc_nick1 = $NICK" >> /home/$USER/.xchat2/xchat.conf
+		echo "irc_nick2 = ${NICK}_" >> /home/$USER/.xchat2/xchat.conf
+		echo "irc_nick3 = ${NICK}__" >> /home/$USER/.xchat2/xchat.conf
+		echo "irc_user_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
+		echo "irc_real_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
+		echo "tab_layout = 0" >> /home/$USER/.xchat2/xchat.conf
+		exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
+	else
+		exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$USER_IRC_CHANNEL"
 	fi
-
-	echo "irc_nick1 = $NICK" >> /home/$USER/.xchat2/xchat.conf
-	echo "irc_nick2 = ${NICK}_" >> /home/$USER/.xchat2/xchat.conf
-	echo "irc_nick3 = ${NICK}__" >> /home/$USER/.xchat2/xchat.conf
-	echo "irc_user_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
-	echo "irc_real_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
-	echo "tab_layout = 0" >> /home/$USER/.xchat2/xchat.conf
-
-	exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
 }
 
 irc_kvirc()
