@@ -1,9 +1,13 @@
-siduction-irc (0.7.4) UNRELEASED; urgency=low
+siduction-irc (0.7.4) unstable; urgency=low
 
+  [ Ovidiu Angelescu ]
   * fixed kde issue about user in installed mode refs #1172
   * changed xchat behaviour for gnome
 
- -- Ovidiu Angelescu <convbsd@siduction.net>  Sat, 04 May 2013 20:46:49 +0300
+  [ Alf Gaida ]
+  * rebuild refs #1178
+
+ -- Alf Gaida <agaida@siduction.org>  Sun, 05 May 2013 13:53:18 +0200
 
 siduction-irc (0.7.3) unstable; urgency=low
 
