@@ -1,8 +1,13 @@
-siduction-irc (0.7.5) UNRELEASED; urgency=low
+siduction-irc (0.7.5) unstable; urgency=low
 
+  [ Ovidiu Angelescu ]
   * fixed gnome, lxde issue refs #1190
 
- -- Ovidiu Angelescu <convbsd@siduction.net>  Tue, 14 May 2013 00:32:18 +0300
+  [ Alf Gaida ]
+  * rebuild closes #1192
+  * rebuild refs #1190
+
+ -- Alf Gaida <agaida@siduction.org>  Tue, 14 May 2013 18:36:42 +0200
 
 siduction-irc (0.7.4) unstable; urgency=low
 
