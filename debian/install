@@ -1,0 +1,6 @@
+siduction-irc           usr/bin/
+siduction-irc.desktop   usr/share/applications/
+siduction-irc.desktop   etc/skel/Desktop/
+icons/siduction-irc.svg usr/share/icons/hicolor/scalable/apps/
+icons/hicolor           usr/share/icons/
+icons/pixmaps           usr/share/

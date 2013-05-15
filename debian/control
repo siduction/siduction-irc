@@ -6,7 +6,7 @@ Uploaders: Alf Gaida <agaida@siduction.org>,
  Ferdinand Thommes <devil@siduction.org>,
  Ovidiu Angelescu <convbsd@siduction.net>,
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Vcs-Git: git://git.siduction.org:packages/siduction-repository/siduction-irc
 Vcs-Browser: http://git.siduction.org/?p=packages/siduction-repository/siduction-irc.git;a=summary
 Homepage: http://developer.berlios.de/projects/fullstory/

@@ -1,3 +1,10 @@
+siduction-irc (0.7.6) unstable; urgency=low
+
+  * install desktop file to /etc/skel/Desktop 
+  * refs #1195 
+
+ -- Alf Gaida <agaida@siduction.org>  Wed, 15 May 2013 18:41:46 +0200
+
 siduction-irc (0.7.5) unstable; urgency=low
 
   [ Ovidiu Angelescu ]
