@@ -5,7 +5,19 @@ set -e
 
 case "$1" in
     configure)
-        chmod +ux /etc/skel/Desktop/siduction-irc.desktop
+        chmod u+x /etc/skel/Desktop/siduction-irc.desktop
+        for i in /home/*/Desktop/siduction-irc.desktop; do
+            if [ -h $i ]; then
+                BASENAME=$(basename $i)
+                if [ -e /etc/skel/Desktop/siduction-irc.desktop ]; then
+                    DIRNAME=$(dirname $i)
+                    rm -f $i
+                    cp /etc/skel/Desktop/siduction-irc.desktop $DIRNAME
+                    USER=$(ls -ld $DIRNAME | awk '{print $3}')
+                    chown "$USER:$USER" $i
+                fi
+            fi
+        done
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

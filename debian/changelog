@@ -1,3 +1,16 @@
+siduction-irc (0.7.8) unstable; urgency=low
+
+  * replace links in /home/$user/Desktop with regular files
+  * closes #1219
+
+ -- Alf Gaida <agaida@siduction.org>  Sun, 19 May 2013 16:21:09 +0200
+
+siduction-irc (0.7.7) unstable; urgency=low
+
+  * typo +ux -> u+x fixed 
+
+ -- Alf Gaida <agaida@siduction.org>  Wed, 15 May 2013 19:34:47 +0200
+
 siduction-irc (0.7.6) unstable; urgency=low
 
   * install desktop file to /etc/skel/Desktop 
