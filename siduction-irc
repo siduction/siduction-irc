@@ -1,6 +1,7 @@
 #!/bin/sh
-# Copyright (C) 2005 Michiel Lieuwe de Boer
+# Copyright (C) 2011-2013 Alf Gaida <agaida@siduction.org>
 # Copyright (C) 2005-2011 Stefan Lippers-Hollmann <s.l-h@gmx.de>
+# Copyright (C) 2005 Michiel Lieuwe de Boer
 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -34,33 +35,49 @@ XTERM_OPT="-e"
 
 
 # determine system status
-MKTEMP="$(which mktemp)"			|| MKTEMP="/bin/mktemp"
-SSFTSH="$(which ssft.sh)"			|| SSFTSH="/usr/bin/ssft.sh"
-SU="$(which su)"				|| SU="/bin/su"
-XTERMINAL="$(which x-terminal-emulator)"	|| XTERMINAL="/usr/bin/x-terminal-emulator"
+MKTEMP="$(which mktemp)"                  || MKTEMP="/bin/mktemp"
+SSFTSH="$(which ssft.sh)"                 || SSFTSH="/usr/bin/ssft.sh"
+SU="$(which su)"                          || SU="/bin/su"
+XTERMINAL="$(which x-terminal-emulator)"  || XTERMINAL="/usr/bin/x-terminal-emulator"
 
-IRSSI="$(which irssi)"				|| IRSSI="/usr/bin/irssi"
-KSIRC="$(which ksirc)"				|| KSIRC="/usr/bin/ksirc"
-KONVERSATION="$(which konversation)"		|| KONVERSATION="/usr/bin/konversation"
-WEECHAT="$(which weechat-curses)"		|| WEECHAT="/usr/bin/weechat-curses"
-XCHAT="$(which xchat)"				|| XCHAT="/usr/bin/xchat"
-KVIRC="$(which kvirc)"				|| KVIRC="/usr/bin/kvirc"
+HEXCHAT="$(which hexchat)"                || HEXCHAT="/usr/bin/hexchat"
+IRSSI="$(which irssi)"                    || IRSSI="/usr/bin/irssi"
+KONVERSATION="$(which konversation)"      || KONVERSATION="/usr/bin/konversation"
+KSIRC="$(which ksirc)"                    || KSIRC="/usr/bin/ksirc"
+KVIRC="$(which kvirc)"                    || KVIRC="/usr/bin/kvirc"
+WEECHAT="$(which weechat-curses)"         || WEECHAT="/usr/bin/weechat-curses"
+XCHAT="$(which xchat)"                    || XCHAT="/usr/bin/xchat"
 
 # internal functions
-fll_irssi()
-{
-	TERM_TYPE="utf-8"
-	#TERM_TYPE="8bit"
-	IRSSICFG="$($MKTEMP -dp /tmp/ .irssi-XXXXXXXXXX)"
+# internal functions
+irc_hexchat() {
+    if [ ! -e "/home/$USER/.config/hexchat/hexchat.conf" ]; then
+        mkdir -p /home/$USER/.config/hexchat
+        touch /home/$USER/.config/hexchat/hexchat.conf
+        echo "irc_nick1 = $NICK"      >> /home/$USER/.config/hexchat/hexchat.conf
+        echo "irc_nick2 = ${NICK}_"   >> /home/$USER/.config/hexchat/hexchat.conf
+        echo "irc_nick3 = ${NICK}__"  >> /home/$USER/.config/hexchat/hexchat.conf
+        echo "irc_user_name = $NICK"  >> /home/$USER/.config/hexchat/hexchat.conf
+        echo "irc_real_name = $NICK"  >> /home/$USER/.config/hexchat/hexchat.conf
+        echo "gui_tab_layout = 2"     >> /home/$USER/.config/hexchat/hexchat.conf
+    fi
+    exec "$HEXCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
+}
 
-	CTCPS=0
-	if [ -e /etc/siduction-version ]; then
-		QUITMSG="$(cat /etc/siduction-version) | http://siduction.org"
-	else
-		QUITMSG="http://siduction.org"
-	fi
 
-	cat <<_EOF_ >"$IRSSICFG/config"
+fll_irssi() {
+    TERM_TYPE="utf-8"
+    #TERM_TYPE="8bit"
+    IRSSICFG="$($MKTEMP -dp /tmp/ .irssi-XXXXXXXXXX)"
+
+    CTCPS=0
+    if [ -e /etc/siduction-version ]; then
+        QUITMSG="$(cat /etc/siduction-version) | http://siduction.org"
+    else
+        QUITMSG="http://siduction.org"
+    fi
+
+    cat <<_EOF_ >"$IRSSICFG/config"
 servers = (
   {
     address = "$FLL_IRC_SERVER";
@@ -85,8 +102,8 @@ channels = (
 );
 _EOF_
 
-	# See also special siduction aliases in here, like "/IBS", "/IBV", "/IB", "/GFX", "/SND", and "/X"
-	cat <<"_EOF_" >>"$IRSSICFG/config"
+    # See also special siduction aliases in here, like "/IBS", "/IBV", "/IB", "/GFX", "/SND", and "/X"
+    cat <<"_EOF_" >>"$IRSSICFG/config"
 aliases = {
   J = "join";
   WJOIN = "join -window";
@@ -289,63 +306,45 @@ windows = {
 mainwindows = { 2 = { first_line = "1"; lines = "47"; }; };
 _EOF_
 
-	[ "$CTCPS" -eq 0 ] && echo 'ignores = ( { level = "CTCPS"; } );' >>"$IRSSICFG/config"
+    [ "$CTCPS" -eq 0 ] && echo 'ignores = ( { level = "CTCPS"; } );' >>"$IRSSICFG/config"
 
-	"$IRSSI" --home="$IRSSICFG"
-	RETC="$?"
-	rm -rf "$IRSSICFG"
-	[ "$RETC" -ne 0 ] && return 127 || exit 0
+    "$IRSSI" --home="$IRSSICFG"
+    RETC="$?"
+    rm -rf "$IRSSICFG"
+    [ "$RETC" -ne 0 ] && return 127 || exit 0
 }
 
 # internal functions
-irc_konversation()
-{
+irc_konversation() {
 # we test if konversation was started and if not it will start as in live mode
-# if it was started it finds user configured nick and it will use it 
-	if [ ! -d /home/$USER/logs ]; then
-		exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
-	else
-		USER_NICK=$(fgrep Nick /home/$USER/logs/oftc_#siduction.log | tail -n1 | awk '{print $13}' | cut -d . -f1)
-		if [   "X${USER_NICK}" != "X" ] ; then
-			sed -i	 "s@^Nicknames=.*@Nicknames=$USER_NICK,${USER_NICK}_,${USER_NICK}__@" /home/$USER/.kde/share/config/konversationrc
-		else 
-			if [ "$FLL_DISTRO_MODE" = "installed" ]; then
-				sed -i	 "s@^Nicknames=.*@Nicknames=$USER,${USER}_,${USER}__@" /home/$USER/.kde/share/config/konversationrc
-			else 
-				sed -i	 "s@^Nicknames=.*@Nicknames=$NICK,${NICK}_,${NICK}__@" /home/$USER/.kde/share/config/konversationrc
-			fi
-		fi
-		exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"
-	fi
+# if it was started it finds user configured nick and it will use it
+    if [ ! -d /home/$USER/logs ]; then
+        exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+    else
+        USER_NICK=$(fgrep Nick /home/$USER/logs/oftc_#siduction.log | tail -n1 | awk '{print $13}' | cut -d . -f1)
+        if [   "X${USER_NICK}" != "X" ] ; then
+            sed -i "s@^Nicknames=.*@Nicknames=$USER_NICK,${USER_NICK}_,${USER_NICK}__@" /home/$USER/.kde/share/config/konversationrc
+        else
+            if [ "$FLL_DISTRO_MODE" = "installed" ]; then
+                sed -i "s@^Nicknames=.*@Nicknames=$USER,${USER}_,${USER}__@" /home/$USER/.kde/share/config/konversationrc
+            else
+                sed -i "s@^Nicknames=.*@Nicknames=$NICK,${NICK}_,${NICK}__@" /home/$USER/.kde/share/config/konversationrc
+            fi
+        fi
+        exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"
+    fi
 }
 
-# internal functions
-irc_xchat()
-{
-	if [ ! -e "/home/$USER/.xchat2/xchat.conf" ]; then
-		mkdir -p /home/$USER/.xchat2
-		touch /home/$USER/.xchat2/xchat.conf
-		echo "irc_nick1 = $NICK" >> /home/$USER/.xchat2/xchat.conf
-		echo "irc_nick2 = ${NICK}_" >> /home/$USER/.xchat2/xchat.conf
-		echo "irc_nick3 = ${NICK}__" >> /home/$USER/.xchat2/xchat.conf
-		echo "irc_user_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
-		echo "irc_real_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
-		echo "tab_layout = 0" >> /home/$USER/.xchat2/xchat.conf
-	fi
-	exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
-}
-
-irc_kvirc()
-{
-if [ "$FLL_DISTRO_MODE" != "installed" ]; then
-	if [ -e "/home/$USER/.config/KVIrc/config/serverdb.kvc" ]; then
-				rm -f /home/$USER/.config/KVIrc/config/serverdb.kvc
-				touch /home/$USER/.config/KVIrc/config/serverdb.kvc
-	else
-		mkdir -p /home/$USER/.config/KVIrc/config/
-		touch /home/$USER/.config/KVIrc/config/serverdb.kvc
-	fi
-	cat  << _EOF_ >> "/home/$USER/.config/KVIrc/config/serverdb.kvc"
+irc_kvirc() {
+    if [ "$FLL_DISTRO_MODE" != "installed" ]; then
+        if [ -e "/home/$USER/.config/KVIrc/config/serverdb.kvc" ]; then
+            rm -f /home/$USER/.config/KVIrc/config/serverdb.kvc
+            touch /home/$USER/.config/KVIrc/config/serverdb.kvc
+        else
+            mkdir -p /home/$USER/.config/KVIrc/config/
+            touch /home/$USER/.config/KVIrc/config/serverdb.kvc
+        fi
+        cat  << _EOF_ >> "/home/$USER/.config/KVIrc/config/serverdb.kvc"
 [OFTC]
 0_Port=$FLL_IRC_PORT
 0_Hostname=$FLL_IRC_SERVER
@@ -362,44 +361,57 @@ NServers=1
 0_User=$NICK
 0_AlternativeNick=${NICK}_
 _EOF_
-fi
-	exec "$KVIRC" --nosplash 
+    fi
+    exec "$KVIRC" --nosplash
 
 }
 
 # internal functions
-irc_check_environ()
-
-{
-	use_xchat=0
-	if [ -n "${GDMSESSION}"  ] || \
-		[ "${DESKTOP_SESSION}" = "LXDE" ]; then
-			use_xchat=1
-	fi
+irc_xchat() {
+    if [ ! -e "/home/$USER/.xchat2/xchat.conf" ]; then
+        mkdir -p /home/$USER/.xchat2
+        touch /home/$USER/.xchat2/xchat.conf
+        echo "irc_nick1 = $NICK" >> /home/$USER/.xchat2/xchat.conf
+        echo "irc_nick2 = ${NICK}_" >> /home/$USER/.xchat2/xchat.conf
+        echo "irc_nick3 = ${NICK}__" >> /home/$USER/.xchat2/xchat.conf
+        echo "irc_user_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
+        echo "irc_real_name = $NICK" >> /home/$USER/.xchat2/xchat.conf
+        echo "tab_layout = 0" >> /home/$USER/.xchat2/xchat.conf
+    fi
+    exec "$XCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
 }
+
+# internal functions
+irc_check_environ() {
+    use_xchat=0
+    if [ -n "${GDMSESSION}"  ] || [ "${DESKTOP_SESSION}" = "LXDE" ]; then
+        use_hexchat=1
+    fi
+}
+
 ##############################################################################
 #                               int main(void);                              #
 ##############################################################################
 
 # yes, this stuff is elementary
 if [ -z "$DISPLAY" ]; then
-	for i in "$SSFTSH" "$SU"; do
-		if [ ! -x "$i" ]; then
-			echo "$i: missing, terminate abnormally"		1>&2
-			exit 999
-		fi
-	done
+    for i in "$SSFTSH" "$SU"; do
+        if [ ! -x "$i" ]; then
+            echo "$i: missing, terminate abnormally" 1>&2
+            exit 999
+        fi
+    done
 else
-	for i in "$SSFTSH" "$XTERMINAL" "$SU"; do
-		if [ ! -x "$i" ]; then
-			echo "$i: missing, terminate abnormally"		1>&2
-			exit 998
-		fi
-	done
+    for i in "$SSFTSH" "$XTERMINAL" "$SU"; do
+        if [ ! -x "$i" ]; then
+            echo "$i: missing, terminate abnormally" 1>&2
+            exit 998
+        fi
+    done
 fi
 
 if [ "$1" = "--tty" ]; then
-	DISPLAY=""
+    DISPLAY=""
 fi
 
 # initialize ssft
@@ -408,66 +420,58 @@ fi
 
 # are you insane?
 if [ "`id -u`" = "0" ]; then
-	echo "ROOOOOOOOOOOOT has landed!"					1>&2
-	echo ""									1>&2
-	echo "Don't ever call any IRC client as root"				1>&2
+    echo "ROOOOOOOOOOOOT has landed!" 1>&2
+    echo "" 1>&2
+    echo "Don't ever call any IRC client as root" 1>&2
 
-	if [ -n "$DISPLAY" ]; then
-		ssft_display_message "ERROR" "ROOOOOOOOOOOOT has landed!\n\nDon't ever call any IRC client as root"
-	fi
+    if [ -n "$DISPLAY" ]; then
+        ssft_display_message "ERROR" "ROOOOOOOOOOOOT has landed!\n\nDon't ever call any IRC client as root"
+    fi
 
-	exit 996
+    exit 996
 fi
 
 # choose your nick
 if [ "$FLL_DISTRO_MODE" != "installed" ]; then
-	SSFT_DEFAULT="$NICK"
-	ssft_read_string "${FLL_DISTRO_NAME} IRC Chat" "Choose your nick" || exit 0
-	NICK="$SSFT_RESULT"
+    SSFT_DEFAULT="$NICK"
+    ssft_read_string "${FLL_DISTRO_NAME} IRC Chat" "Choose your nick" || exit 0
+    NICK="$SSFT_RESULT"
 fi
 
 # try to start your irc client
 irc_check_environ
 if [ -z "$DISPLAY" ]; then
-	# tty
-	if [ -x "$IRSSI" ]; then
-		fll_irssi
-		exit "$?"
-	fi
+    # tty
+    if [ -x "$IRSSI" ]; then
+        fll_irssi
+        exit "$?"
+    fi
 
-	[ -x "$WEECHAT" ] && \
-		exec $WEECHAT "irc://$NICK@$FLL_IRC_SERVER:$FLL_IRC_PORT/$FLL_IRC_CHANNEL"
+    [ -x "$WEECHAT" ] && exec $WEECHAT "irc://$NICK@$FLL_IRC_SERVER:$FLL_IRC_PORT/$FLL_IRC_CHANNEL"
 else
-	# X11
+    # X11
+    [ -x "$HEXCHAT" ] && [ "$use_hexchat" = "1" ] && irc_hexchat
+    [ -x "$KONVERSATION" ] && irc_konversation
+    [ -x "$KSIRC" ] && exec "$KSIRC" --server "$FLL_IRC_SERVER" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+    [ -x "$KVIRC" ] && irc_kvirc
+    [ -x "$XCHAT" ] && [ "$use_xchat" = "1" ] && irc_xchat
 
-	[ -x "$XCHAT" ] && [ "$use_xchat" = "1" ] &&\
-		irc_xchat
-
-	[ -x "$KONVERSATION" ] && \
-		irc_konversation
-
-	[ -x "$KVIRC" ] && \
-		irc_kvirc
-
-	[ -x "$KSIRC" ] && \
-		exec "$KSIRC" --server "$FLL_IRC_SERVER" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
-
-	# nasty fallback, but well - it works ;)
-  TERMPATH=$(readlink -f /etc/alternatives/x-terminal-emulator)
-  TERM=$(basename ${TERMPATH})
-  if [ "x${TERM}" = "xurxvt" ]; then
-    exec ${XTERMINAL} ${XTERM_OPT} $0 --tty
-  else
-	  exec $XTERMINAL $XTERM_OPT "$0 --tty"
-  fi
+    # nasty fallback, but well - it works ;)
+    TERMPATH=$(readlink -f /etc/alternatives/x-terminal-emulator)
+    TERM=$(basename ${TERMPATH})
+    if [ "x${TERM}" = "xurxvt" ]; then
+        exec ${XTERMINAL} ${XTERM_OPT} $0 --tty
+    else
+        exec $XTERMINAL $XTERM_OPT "$0 --tty"
+    fi
 fi
 
 # Oops...
-echo "ERROR: failed to start any suitable IRC Client"				1>&2
-for i in "$SSFTSH" "$IRSSI" "$KSIRC" "$KONVERSATION"  "$KVIRC" "$WEECHAT" "$XCHAT"; do
-	if [ -x "$i" ]; then
-		echo "$i: found."
-	else
-		echo "$i: NOT found."						1>&2
-	fi
+echo "ERROR: failed to start any suitable IRC Client" 1>&2
+for i in  "$HEXCHAT" "$IRSSI" "$KONVERSATION" "$KSIRC" "$KVIRC" "$SSFTSH" "$WEECHAT" "$XCHAT"; do
+    if [ -x "$i" ]; then
+        echo "$i: found."
+    else
+        echo "$i: NOT found." 1>&2
+    fi
 done

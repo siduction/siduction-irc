@@ -1,3 +1,12 @@
+siduction-irc (0.7.9) unstable; urgency=low
+
+  * added hexchat
+  * rework control and rules
+  * delete source.lintian-overrides
+  * cleanup copyright
+
+ -- Alf Gaida <agaida@siduction.org>  Sat, 21 Sep 2013 13:09:14 +0200
+
 siduction-irc (0.7.8) unstable; urgency=low
 
   * replace links in /home/$user/Desktop with regular files
