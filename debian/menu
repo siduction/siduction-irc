@@ -3,6 +3,5 @@
 	section="Applications/Network/Communication" \
 	hints="siduction,Net" \
 	title="IRC Chat #siduction" \
-	icon32x32="/usr/share/pixmaps/siduction-irc.xpm" \
-	icon16x16="/usr/share/pixmaps/siduction-irc-16.xpm" \
+	icon="/usr/share/siduction-irc.xpm" \
 	command="siduction-irc"

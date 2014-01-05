@@ -5,19 +5,21 @@ Maintainer: Torsten Wohlfarth <towo@siduction.org>
 Uploaders: Alf Gaida <agaida@siduction.org>,
  Ferdinand Thommes <devil@siduction.org>,
  Ovidiu Angelescu <convbsd@siduction.net>,
-Build-Depends: debhelper (>= 9),
+Build-Depends:
+ debhelper (>= 9),
  inkscape,
  imagemagick,
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Vcs-Git: git://git.siduction.org:packages/siduction-repository/siduction-irc
 Vcs-Browser: http://git.siduction.org/?p=packages/siduction-repository/siduction-irc.git;a=summary
 
 Package: siduction-irc
 Architecture: all
-Depends: ${misc:Depends},
+Depends:
+ ${misc:Depends},
  ssft,
  irssi | weechat-curses
-Suggests: konversation (>> 0.18) | ksirc | xchat,
+Suggests: konversation (>> 0.18) | kvirc | xchat| hexchat,
  python,
  distro-defaults,
  xterm | x-terminal-emulator,

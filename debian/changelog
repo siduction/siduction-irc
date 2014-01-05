@@ -1,3 +1,24 @@
+siduction-irc (2014.01.5) unstable; urgency=medium
+
+  * some cleanup
+  * menu and icon fixed
+  * year in copyright
+  * fixed licenses in copyright
+
+ -- Alf Gaida <agaida@siduction.org>  Sun, 05 Jan 2014 16:41:56 +0100
+
+siduction-irc (2013.10.14) unstable; urgency=low
+
+  * move to unstable
+
+ -- Alf Gaida <agaida@siduction.org>  Mon, 14 Oct 2013 19:53:41 +0200
+
+siduction-irc (2013.09.21) next; urgency=low
+
+  * change to a date-based numbering
+
+ -- Alf Gaida <agaida@siduction.org>  Sat, 21 Sep 2013 13:15:37 +0200
+
 siduction-irc (0.7.9) unstable; urgency=low
 
   * added hexchat

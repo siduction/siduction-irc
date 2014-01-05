@@ -3,21 +3,21 @@ Upstream-Name: siduction-irc
 Source: <http://chili.siduction.org>
 
 Files: *
-Copyright: 2012-2013 Alf Gaida <agaida@siduction.org>
+Copyright: 2012-2014 Alf Gaida <agaida@siduction.org>
            2011      Torsten Wohlfarth <towo@siduction.org>
            2005-2010 Stefan Lippers-Hollmann <s.l-h@gmx.de>
            2005-2007 Michiel Lieuwe de Boer
-License: GPL-2
+License: GPL-2.0
 
 Files: debian/*
-Copyright: 2012-2013 Alf Gaida <agaida@siduction.org>
+Copyright: 2012-2014 Alf Gaida <agaida@siduction.org>
            2011-2013 Torsten Wohlfarth <towo@siduction.org>
            2005-2008 Stefan Lippers-Hollmann <s.l-h@gmx.de>
-License: GPL-2
+License: GPL-2.0
 
 Files: icons/*
 Copyright: 2011 Markus Meyer <coruja@siduction.org> 
-License: WTFPL2
+License: WTFPL-2
 
 License: GPL-2.0
  This package is free software; you can redistribute it and/or modify
