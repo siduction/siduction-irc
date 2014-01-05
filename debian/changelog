@@ -1,5 +1,6 @@
-siduction-irc (2014.01.5) unstable; urgency=medium
+siduction-irc (2014.01.05) unstable; urgency=medium
 
+  * icon false path
   * some cleanup
   * menu and icon fixed
   * year in copyright
