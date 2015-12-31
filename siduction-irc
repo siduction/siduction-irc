@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2011-2013 Alf Gaida <agaida@siduction.org>
+# Copyright (C) 2011-2015 Alf Gaida <agaida@siduction.org>
 # Copyright (C) 2005-2011 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 # Copyright (C) 2005 Michiel Lieuwe de Boer
 
@@ -43,12 +43,10 @@ XTERMINAL="$(which x-terminal-emulator)"  || XTERMINAL="/usr/bin/x-terminal-emul
 HEXCHAT="$(which hexchat)"                || HEXCHAT="/usr/bin/hexchat"
 IRSSI="$(which irssi)"                    || IRSSI="/usr/bin/irssi"
 KONVERSATION="$(which konversation)"      || KONVERSATION="/usr/bin/konversation"
-KSIRC="$(which ksirc)"                    || KSIRC="/usr/bin/ksirc"
 KVIRC="$(which kvirc)"                    || KVIRC="/usr/bin/kvirc"
 WEECHAT="$(which weechat-curses)"         || WEECHAT="/usr/bin/weechat-curses"
 XCHAT="$(which xchat)"                    || XCHAT="/usr/bin/xchat"
 
-# internal functions
 # internal functions
 irc_hexchat() {
     if [ ! -e "/home/$USER/.config/hexchat/hexchat.conf" ]; then
@@ -64,7 +62,7 @@ irc_hexchat() {
     exec "$HEXCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
 }
 
-
+# internal functions
 fll_irssi() {
     TERM_TYPE="utf-8"
     #TERM_TYPE="8bit"
@@ -384,9 +382,14 @@ irc_xchat() {
 # internal functions
 irc_check_environ() {
     use_xchat=0
-    if [ -n "${GDMSESSION}"  ] || [ "${DESKTOP_SESSION}" = "LXDE" ]; then
-        use_hexchat=1
-    fi
+    case "${XDG_CURRENT_DESKTOP}" in
+        "KDE")
+            use_konversation=1
+        ;;
+        *)
+            use_hexchat=1
+        ;;
+    esac
 }
 
 ##############################################################################
@@ -450,11 +453,10 @@ if [ -z "$DISPLAY" ]; then
     [ -x "$WEECHAT" ] && exec $WEECHAT "irc://$NICK@$FLL_IRC_SERVER:$FLL_IRC_PORT/$FLL_IRC_CHANNEL"
 else
     # X11
-    [ -x "$HEXCHAT" ] && [ "$use_hexchat" = "1" ] && irc_hexchat
-    [ -x "$KONVERSATION" ] && irc_konversation
-    [ -x "$KSIRC" ] && exec "$KSIRC" --server "$FLL_IRC_SERVER" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
-    [ -x "$KVIRC" ] && irc_kvirc
-    [ -x "$XCHAT" ] && [ "$use_xchat" = "1" ] && irc_xchat
+    [ -x "$HEXCHAT" ]      && [ "$use_hexchat" = "1" ]      && irc_hexchat
+    [ -x "$KONVERSATION" ] && [ "$use_konversation" = "1" ] && irc_konversation
+    [ -x "$KVIRC" ]                                         && irc_kvirc
+    [ -x "$XCHAT" ]                                         && irc_xchat
 
     # nasty fallback, but well - it works ;)
     TERMPATH=$(readlink -f /etc/alternatives/x-terminal-emulator)
@@ -468,7 +470,7 @@ fi
 
 # Oops...
 echo "ERROR: failed to start any suitable IRC Client" 1>&2
-for i in  "$HEXCHAT" "$IRSSI" "$KONVERSATION" "$KSIRC" "$KVIRC" "$SSFTSH" "$WEECHAT" "$XCHAT"; do
+for i in  "$HEXCHAT" "$IRSSI" "$KONVERSATION" "$KVIRC" "$SSFTSH" "$WEECHAT" "$XCHAT"; do
     if [ -x "$i" ]; then
         echo "$i: found."
     else

@@ -1,3 +1,9 @@
+siduction-irc (2015.12.31) unstable; urgency=medium
+
+  * Rewrite the irc-selector by reimplementin the environment check
+
+ -- Alf Gaida <agaida@siduction.org>  Thu, 31 Dec 2015 01:42:45 +0100
+
 siduction-irc (2014.01.05) unstable; urgency=medium
 
   * icon false path
