@@ -10,13 +10,14 @@ Copyright: 2012-2014 Alf Gaida <agaida@siduction.org>
 License: GPL-2.0
 
 Files: debian/*
-Copyright: 2012-2014 Alf Gaida <agaida@siduction.org>
+Copyright: 2012-2016 Alf Gaida <agaida@siduction.org>
            2011-2013 Torsten Wohlfarth <towo@siduction.org>
            2005-2008 Stefan Lippers-Hollmann <s.l-h@gmx.de>
 License: GPL-2.0
 
 Files: icons/*
-Copyright: 2011 Markus Meyer <coruja@siduction.org> 
+Copyright: 2016 Hendrik Lehmbruch <hendrikl@siduction.org>
+           2011 Markus Meyer <coruja@siduction.org> 
 License: WTFPL-2
 
 License: GPL-2.0

@@ -6,12 +6,12 @@ Uploaders: Alf Gaida <agaida@siduction.org>,
  Ferdinand Thommes <devil@siduction.org>,
  Ovidiu Angelescu <convbsd@siduction.net>,
 Build-Depends:
- debhelper (>= 9),
+ debhelper (>= 10),
  inkscape,
  imagemagick,
-Standards-Version: 3.9.5
-Vcs-Git: git://git.siduction.org:packages/siduction-repository/siduction-irc
-Vcs-Browser: http://git.siduction.org/?p=packages/siduction-repository/siduction-irc.git;a=summary
+Standards-Version: 3.9.8
+Vcs-Git: https://git.siduction.org/extra/siduction-irc.git
+Vcs-Browser: https://git.siduction.org/extra/siduction-irc.git
 
 Package: siduction-irc
 Architecture: all

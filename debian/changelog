@@ -1,3 +1,12 @@
+siduction-irc (2016.11.14) unstable; urgency=medium
+
+  * neue blaugraue icons
+  * compat 10, dh 10
+  * fixed vcs-fields
+  * fixed copyrights
+
+ -- Alf Gaida <agaida@siduction.org>  Mon, 14 Nov 2016 22:26:39 +0100
+
 siduction-irc (2015.12.31) unstable; urgency=medium
 
   * Rewrite the irc-selector by reimplementin the environment check
