@@ -70,9 +70,9 @@ fll_irssi() {
 
     CTCPS=0
     if [ -e /etc/siduction-version ]; then
-        QUITMSG="$(cat /etc/siduction-version) | http://siduction.org"
+        QUITMSG="$(cat /etc/siduction-version) | https://siduction.site"
     else
-        QUITMSG="http://siduction.org"
+        QUITMSG="https://siduction.site"
     fi
 
     cat <<_EOF_ >"$IRSSICFG/config"
