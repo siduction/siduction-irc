@@ -1,8 +1,12 @@
 siduction-irc (2021-06-14) unstable; urgency=medium
 
+  [ Vinzenz Vietzke ]
   * new website url + ssl
 
- -- Vinzenz Vietzke <vinz@vinzv.de>  Mon, 14 Jun 2021 20:32:39 +0200
+  [ Torsten Wohlfarth ]
+  * package the changes 
+
+ -- Torsten Wohlfarth <towo@siduction.org>  Tue, 15 Jun 2021 08:26:13 +0200
 
 siduction-irc (2016.11.14) unstable; urgency=medium
 
