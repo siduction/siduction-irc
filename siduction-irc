@@ -81,6 +81,8 @@ servers = (
     address = "$FLL_IRC_SERVER";
     chatnet = "oftc";
     port = "$FLL_IRC_PORT";
+    use_tls = "yes";
+    tls_verify = "yes";
     autoconnect = "yes";
   }
 );
@@ -317,7 +319,7 @@ irc_konversation() {
 # we test if konversation was started and if not it will start as in live mode
 # if it was started it finds user configured nick and it will use it
     if [ ! -d /home/$USER/logs ]; then
-        exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
+        exec "$KONVERSATION" --ssl --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL" --nick "$NICK"
     else
         USER_NICK=$(fgrep Nick /home/$USER/logs/oftc_#siduction.log | tail -n1 | awk '{print $13}' | cut -d . -f1)
         if [   "X${USER_NICK}" != "X" ] ; then
@@ -329,7 +331,7 @@ irc_konversation() {
                 sed -i "s@^Nicknames=.*@Nicknames=$NICK,${NICK}_,${NICK}__@" /home/$USER/.kde/share/config/konversationrc
             fi
         fi
-        exec "$KONVERSATION" --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"
+        exec "$KONVERSATION" --ssl --server "$FLL_IRC_SERVER" --port "$FLL_IRC_PORT" --channel "$FLL_IRC_CHANNEL"
     fi
 }
 
@@ -352,7 +354,7 @@ NServers=1
 0_Pass=
 0_OnLoginCommand=
 0_Description=main%20OFTC.net%20server
-0_SSL=false
+0_SSL=true
 0_AutoJoinChannels=$FLL_IRC_CHANNEL
 0_Id=myserver942982771597
 0_RealName=$NICK
