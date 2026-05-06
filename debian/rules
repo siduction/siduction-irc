@@ -11,7 +11,7 @@ create-icons:
 	    mkdir -p "icons/hicolor/$${i}x$${i}/apps" ; \
 	    inkscape --export-width=$${i} \
 	         --export-height=$${i} \
-	         --export-png="$(CURDIR)/icons/hicolor/$${i}x$${i}/apps/siduction-irc.png" \
+	         --export-filename="$(CURDIR)/icons/hicolor/$${i}x$${i}/apps/siduction-irc.png" \
 	         $(CURDIR)/icons/siduction-irc.svg ; \
 	done
 	convert icons/hicolor/32x32/apps/siduction-irc.png icons/siduction-irc.xpm

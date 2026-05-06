@@ -1,3 +1,9 @@
+siduction-irc (2026-05-06) unstable; urgency=medium
+
+  * changes for zoitchat
+
+ -- Torsten Wohlfarth <towo@siduction.org>  Wed, 06 May 2026 22:01:42 +0200
+
 siduction-irc (2024-04-24) unstable; urgency=medium
 
   * package https://github.com/siduction/siduction-irc/commit/0918a02770aeb6d9abdf41b71778e18caa47bef8
