@@ -47,6 +47,7 @@ KONVERSATION="$(which konversation)"      || KONVERSATION="/usr/bin/konversation
 KVIRC="$(which kvirc)"                    || KVIRC="/usr/bin/kvirc"
 WEECHAT="$(which weechat-curses)"         || WEECHAT="/usr/bin/weechat-curses"
 XCHAT="$(which xchat)"                    || XCHAT="/usr/bin/xchat"
+ZOITECHAT="$(which zoitechat)"			  || ZOITECHAT="/usr/bin/zoitechat"
 
 # internal functions
 irc_hexchat() {
@@ -61,6 +62,21 @@ irc_hexchat() {
         echo "gui_tab_layout = 2"     >> /home/$USER/.config/hexchat/hexchat.conf
     fi
     exec "$HEXCHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
+}
+
+# internal functions
+irc_zoitechat() {
+    if [ ! -e "/home/$USER/.config/zoitechat/zoitechat.conf" ]; then
+        mkdir -p /home/$USER/.config/zoitechat
+        touch /home/$USER/.config/zoitechat/zoitechat.conf
+        echo "irc_nick1 = $NICK"      >> /home/$USER/.config/zoitechat/zoitechat.conf
+        echo "irc_nick2 = ${NICK}_"   >> /home/$USER/.config/zoitechat/zoitechat.conf
+        echo "irc_nick3 = ${NICK}__"  >> /home/$USER/.config/zoitechat/zoitechat.conf
+        echo "irc_user_name = $NICK"  >> /home/$USER/.config/zoitechat/zoitechat.conf
+        echo "irc_real_name = $NICK"  >> /home/$USER/.config/zoitechat/zoitechat.conf
+        echo "gui_tab_layout = 2"     >> /home/$USER/.config/zoitechat/zoitechat.conf
+    fi
+    exec "$ZOITECHAT" --url=irc://"$FLL_IRC_SERVER":"$FLL_IRC_PORT"/"$FLL_IRC_CHANNEL"
 }
 
 # internal functions
@@ -456,10 +472,11 @@ if [ -z "$DISPLAY" ]; then
     [ -x "$WEECHAT" ] && exec $WEECHAT "irc://$NICK@$FLL_IRC_SERVER:$FLL_IRC_PORT/$FLL_IRC_CHANNEL"
 else
     # X11
-    [ -x "$HEXCHAT" ]      && [ "$use_hexchat" = "1" ]      && irc_hexchat
+    [ -x "$HEXCHAT" ]										&& irc_hexchat
     [ -x "$KONVERSATION" ] && [ "$use_konversation" = "1" ] && irc_konversation
     [ -x "$KVIRC" ]                                         && irc_kvirc
-    [ -x "$XCHAT" ]                                         && irc_xchat
+    [ -x "$XCHAT" ]                                         && irc_xchat 
+	[ -x "$ZOITECHAT" ]	   && [ "$use_zoitechat" = "1" ]    && irc_zoitechat
 
     # nasty fallback, but well - it works ;)
     TERMPATH=$(readlink -f /etc/alternatives/x-terminal-emulator)
@@ -473,7 +490,7 @@ fi
 
 # Oops...
 echo "ERROR: failed to start any suitable IRC Client" 1>&2
-for i in  "$HEXCHAT" "$IRSSI" "$KONVERSATION" "$KVIRC" "$SSFTSH" "$WEECHAT" "$XCHAT"; do
+for i in  "$HEXCHAT" "$IRSSI" "$KONVERSATION" "$KVIRC" "$SSFTSH" "$WEECHAT" "$XCHAT" "$ZOITECHAT"; do
     if [ -x "$i" ]; then
         echo "$i: found."
     else
