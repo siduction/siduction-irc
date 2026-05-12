@@ -391,7 +391,7 @@ irc_check_environ() {
             use_konversation=1
         ;;
         *)
-            use_hexchat=1
+            use_zoitechat=1
         ;;
     esac
 }
