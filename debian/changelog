@@ -1,3 +1,10 @@
+siduction-irc (2026-05-07) unstable; urgency=medium
+
+  [ hhl ]
+  * enable zoitechat, use_hexchat=1 -> use_zoitechat=1
+
+ -- Torsten Wohlfarth <towo@siduction.org>  Thu, 14 May 2026 13:34:40 +0200
+
 siduction-irc (2026-05-06) unstable; urgency=medium
 
   * changes for zoitchat
